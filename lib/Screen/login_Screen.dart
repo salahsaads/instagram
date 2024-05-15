@@ -78,7 +78,7 @@ class _LoginState extends State<Login> {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) => Sign_up()));
               },
-              child: Text(
+              child: const Text(
                 'don\`t you have an account?',
                 style: TextStyle(color: Colors.blue),
               ))
