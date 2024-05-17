@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:instagram/Screen/Home.dart';
+import 'package:instagram/Screen/Search.dart';
 
 class BouttonBar extends StatefulWidget {
   const BouttonBar({super.key});
@@ -12,11 +13,9 @@ class _BouttonBarState extends State<BouttonBar> {
   int _select = 0;
   final list = [
     Home(),
+    SearchScreen(),
     Scaffold(
       backgroundColor: Colors.amber,
-    ),
-    Scaffold(
-      backgroundColor: Colors.amberAccent,
     ),
     Scaffold(
       backgroundColor: Colors.blue,
