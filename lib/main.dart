@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:instagram/Screen/Sign_up_Screen.dart';
 import 'package:instagram/Screen/bottonBar.dart';
 
 void main() {

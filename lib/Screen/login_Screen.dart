@@ -35,6 +35,8 @@ class _LoginState extends State<Login> {
               child: Column(
                 children: [
                   TextFormField(
+
+                    // ignore: body_might_complete_normally_nullable
                     validator: (value) {
                       if (value!.isEmpty || !value.contains('@')) {
                         return 'please enter a vaild email';
@@ -51,6 +53,7 @@ class _LoginState extends State<Login> {
                     height: height * .03,
                   ),
                   TextFormField(
+                    // ignore: body_might_complete_normally_nullable
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'please enter Password';
