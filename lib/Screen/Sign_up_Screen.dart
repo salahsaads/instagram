@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:instagram/Screen/bottonBar.dart';
 import 'package:instagram/Screen/login_Screen.dart';
 
 class Sign_up extends StatelessWidget {
@@ -48,6 +49,11 @@ class Sign_up extends StatelessWidget {
                 child: Column(
                   children: [
                     TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'please enter your username ';
+                        }
+                      },
                       decoration: const InputDecoration(
                           hintText: 'name',
                           focusedBorder: OutlineInputBorder(
@@ -59,6 +65,11 @@ class Sign_up extends StatelessWidget {
                       height: height * .03,
                     ),
                     TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty || !value.contains('@')) {
+                          return 'please enter a vaild email';
+                        }
+                      },
                       decoration: const InputDecoration(
                           hintText: 'email',
                           focusedBorder: OutlineInputBorder(
@@ -70,6 +81,11 @@ class Sign_up extends StatelessWidget {
                       height: height * .03,
                     ),
                     TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty || value.length < 7) {
+                          return 'please enter a vaild   Password';
+                        }
+                      },
                       decoration: const InputDecoration(
                           suffixIcon: Icon(Icons.visibility_off),
                           hintText: 'password',
@@ -83,15 +99,24 @@ class Sign_up extends StatelessWidget {
             SizedBox(
               height: height * .05,
             ),
-            Container(
-              alignment: Alignment.center,
-              width: double.infinity,
-              height: height * .05,
-              decoration: BoxDecoration(
-                  color: Colors.blue, borderRadius: BorderRadius.circular(5)),
-              child: const Text(
-                'Sing Up',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            GestureDetector(
+              onTap: () {
+                formkey.currentState!.save();
+                if (formkey.currentState!.validate()) {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => BouttonBar()));
+                }
+              },
+              child: Container(
+                alignment: Alignment.center,
+                width: double.infinity,
+                height: height * .05,
+                decoration: BoxDecoration(
+                    color: Colors.blue, borderRadius: BorderRadius.circular(5)),
+                child: const Text(
+                  'Sing Up',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
               ),
             ),
             SizedBox(

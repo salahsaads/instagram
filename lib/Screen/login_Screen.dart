@@ -35,6 +35,11 @@ class _LoginState extends State<Login> {
               child: Column(
                 children: [
                   TextFormField(
+                    validator: (value) {
+                      if (value!.isEmpty || !value.contains('@')) {
+                        return 'please enter a vaild email';
+                      }
+                    },
                     decoration: const InputDecoration(
                         hintText: 'email',
                         focusedBorder: OutlineInputBorder(
@@ -46,6 +51,11 @@ class _LoginState extends State<Login> {
                     height: height * .03,
                   ),
                   TextFormField(
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'please enter Password';
+                      }
+                    },
                     decoration: const InputDecoration(
                         suffixIcon: Icon(Icons.visibility_off),
                         hintText: 'password',
@@ -59,15 +69,23 @@ class _LoginState extends State<Login> {
           SizedBox(
             height: height * .05,
           ),
-          Container(
-            alignment: Alignment.center,
-            width: double.infinity,
-            height: height * .05,
-            decoration: BoxDecoration(
-                color: Colors.blue, borderRadius: BorderRadius.circular(5)),
-            child: const Text(
-              'Login',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          GestureDetector(
+            onTap: () {
+              formkey.currentState!.save();
+              if (formkey.currentState!.validate()) {
+             
+              }
+            },
+            child: Container(
+              alignment: Alignment.center,
+              width: double.infinity,
+              height: height * .05,
+              decoration: BoxDecoration(
+                  color: Colors.blue, borderRadius: BorderRadius.circular(5)),
+              child: const Text(
+                'Login',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
             ),
           ),
           SizedBox(
