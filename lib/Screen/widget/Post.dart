@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:instagram/Screen/comment.dart';
 
 class PostCard extends StatelessWidget {
   PostCard({super.key});
@@ -59,7 +60,12 @@ class PostCard extends StatelessWidget {
             height: 5,
           ),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const CommentScreen()));
+            },
             child:
                 const Text('Add Comment', style: TextStyle(color: Colors.grey)),
           ),
