@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:instagram/provider/provider.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -8,11 +10,16 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.sizeOf(context).height;
     // ignore: unused_local_variable
     double w = MediaQuery.sizeOf(context).width;
+
+    final userprovider = Provider.of<Userprovider>(context);
+   
+
     return SafeArea(
       child: Scaffold(
         body: Padding(
@@ -24,13 +31,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(
                   height: h * .05,
                 ),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CircleAvatar(
-                      radius: 36,
-                    ),
-                    Column(
+                        radius: 36,
+                        backgroundImage:
+                            NetworkImage(userprovider.getUser!.imageUrl)),
+                    const Column(
                       children: [
                         Text(
                           '12',
@@ -68,10 +76,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     )
                   ],
                 ),
-                const Padding(
+                Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
-                    'Name',
+                    '${userprovider.getUser!.username}',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),

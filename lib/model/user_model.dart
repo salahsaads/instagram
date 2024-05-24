@@ -2,17 +2,36 @@ class UserModel {
   final String username, email, password, imageUrl, uid;
   final List followers;
   final List following;
-  UserModel(this.email, this.username, this.password, this.imageUrl, this.uid,
-      this.followers, this.following);
+
+  UserModel(
+      {required this.email,
+      required this.username,
+      required this.password,
+      required this.imageUrl,
+      required this.uid,
+      required this.followers,
+      required this.following});
 
   factory UserModel.fromJson(jsonData) {
     return UserModel(
-        jsonData['email'],
-        jsonData['username'],
-        jsonData['password'],
-        jsonData['imageUrl'],
-        jsonData['uid'],
-        jsonData['followers'],
-        jsonData['following']);
+        email: jsonData['email'],
+        username: jsonData['username'],
+        password: jsonData['password'],
+        imageUrl: jsonData['imageUrl'],
+        uid: jsonData['uid'],
+        followers: jsonData['followers'],
+        following: jsonData['following']);
+  }
+
+  Map<String, dynamic> convertTamp() {
+    return {
+      'email': email,
+      'username': username,
+      'password': password,
+      'imageUrl': imageUrl,
+      'uid': uid,
+      'followers': followers,
+      'following': following
+    };
   }
 }

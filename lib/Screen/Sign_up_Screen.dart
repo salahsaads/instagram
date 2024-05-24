@@ -1,9 +1,16 @@
 // ignore_for_file: body_might_complete_normally_nullable
 
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:instagram/Screen/bottonBar.dart';
 import 'package:instagram/Screen/login_Screen.dart';
+import 'package:instagram/model/user_model.dart';
+import 'package:uuid/uuid.dart';
 
 class Sign_up extends StatefulWidget {
   Sign_up({super.key});
@@ -17,16 +24,49 @@ class _Sign_upState extends State<Sign_up> {
   TextEditingController name = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+
+  File? pickedImage;
+  String? URl;
+  void selectImage() async {
+    var image = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      var Selected = File(image.path);
+      setState(() {
+        pickedImage = Selected;
+      });
+    }
+  }
+
   bool isloading = false;
-  void sing_up({required String emailAddress, required String password}) async {
+  void sing_up({required String emailAddress, required String password1}) async {
     setState(() {
       isloading = true;
     });
     try {
+      final uuid = Uuid().v4();
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child('usersImage')
+          .child(uuid + 'jpg');
+      await ref.putFile(pickedImage!);
+      final ImageUrl = await ref.getDownloadURL();
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailAddress,
-        password: password,
+        password: password1,
       );
+      UserModel data = UserModel(
+          email: email.text,
+          username: name.text,
+          password: password.text,
+          imageUrl: ImageUrl,
+          uid: FirebaseAuth.instance.currentUser!.uid,
+          followers: [],
+          following: []);
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .set(data.convertTamp());
 
       Navigator.pushReplacement(
           context,
@@ -86,14 +126,21 @@ class _Sign_upState extends State<Sign_up> {
               ),
               Stack(
                 children: [
-                  const CircleAvatar(
-                    radius: 36,
-                  ),
+                  pickedImage != null
+                      ? CircleAvatar(
+                          radius: 36,
+                          backgroundImage: FileImage(pickedImage!),
+                        )
+                      : CircleAvatar(
+                          radius: 36,
+                        ),
                   Positioned(
                       top: 25,
                       left: 25,
                       child: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          selectImage();
+                        },
                         icon: const Icon(Icons.add),
                       )),
                 ],
@@ -163,7 +210,7 @@ class _Sign_upState extends State<Sign_up> {
                 onTap: () {
                   formkey.currentState!.save();
                   if (formkey.currentState!.validate()) {
-                    sing_up(password: password.text, emailAddress: email.text);
+                    sing_up(password1: password.text, emailAddress: email.text);
                   }
                 },
                 child: Container(

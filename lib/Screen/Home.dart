@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/Screen/login_Screen.dart';
 import 'package:instagram/Screen/widget/Post.dart';
+import 'package:instagram/provider/provider.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -11,6 +13,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final userprovider = Provider.of<Userprovider>(context, listen: false);
+    userprovider.fetchUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.sizeOf(context).height;
