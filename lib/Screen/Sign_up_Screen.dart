@@ -17,8 +17,11 @@ class _Sign_upState extends State<Sign_up> {
   TextEditingController name = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
-
+  bool isloading = false;
   void sing_up({required String emailAddress, required String password}) async {
+    setState(() {
+      isloading = true;
+    });
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailAddress,
@@ -30,6 +33,10 @@ class _Sign_upState extends State<Sign_up> {
           MaterialPageRoute(
             builder: (context) => BouttonBar(),
           ));
+
+      setState(() {
+        isloading = false;
+      });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
@@ -166,10 +173,13 @@ class _Sign_upState extends State<Sign_up> {
                   decoration: BoxDecoration(
                       color: Colors.blue,
                       borderRadius: BorderRadius.circular(5)),
-                  child: const Text(
-                    'Sing Up',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                  ),
+                  child: isloading == true
+                      ? CircularProgressIndicator()
+                      : const Text(
+                          'Sing Up',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
                 ),
               ),
               SizedBox(

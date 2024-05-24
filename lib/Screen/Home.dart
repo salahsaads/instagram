@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/Screen/login_Screen.dart';
 import 'package:instagram/Screen/widget/Post.dart';
 
 class Home extends StatefulWidget {
@@ -32,7 +34,16 @@ class _HomeState extends State<Home> {
                           fontSize: 24,
                           color: Colors.white),
                     ),
-                    IconButton(onPressed: () {}, icon: Icon(Icons.logout))
+                    IconButton(
+                        onPressed: () async {
+                          await FirebaseAuth.instance.signOut();
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Login(),
+                              ));
+                        },
+                        icon: Icon(Icons.logout))
                   ],
                 ),
                 SizedBox(

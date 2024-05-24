@@ -1,5 +1,8 @@
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/Screen/Sign_up_Screen.dart';
+import 'package:instagram/Screen/bottonBar.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -10,6 +13,47 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final formkey = GlobalKey<FormState>();
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+  bool isloading = false;
+  void login({required String emailAddress, required String password}) async {
+    setState(() {
+      isloading = true;
+    });
+
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: emailAddress, password: password);
+           Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BouttonBar(),
+          ));
+
+
+      setState(() {
+        isloading = false;
+      });
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('No user found for that email.')));
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Wrong password provided for that user.')));
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    email.dispose();
+    password.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -35,6 +79,7 @@ class _LoginState extends State<Login> {
               child: Column(
                 children: [
                   TextFormField(
+                    controller: email,
 
                     // ignore: body_might_complete_normally_nullable
                     validator: (value) {
@@ -53,6 +98,7 @@ class _LoginState extends State<Login> {
                     height: height * .03,
                   ),
                   TextFormField(
+                    controller: password,
                     // ignore: body_might_complete_normally_nullable
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -76,7 +122,7 @@ class _LoginState extends State<Login> {
             onTap: () {
               formkey.currentState!.save();
               if (formkey.currentState!.validate()) {
-             
+                login(emailAddress: email.text, password: password.text);
               }
             },
             child: Container(
@@ -85,10 +131,13 @@ class _LoginState extends State<Login> {
               height: height * .05,
               decoration: BoxDecoration(
                   color: Colors.blue, borderRadius: BorderRadius.circular(5)),
-              child: const Text(
-                'Login',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
+              child: isloading == true
+                  ? CircularProgressIndicator()
+                  : const Text(
+                      'Login',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    ),
             ),
           ),
           SizedBox(
