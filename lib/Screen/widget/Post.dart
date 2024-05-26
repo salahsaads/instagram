@@ -3,7 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:instagram/Screen/comment.dart';
 
 class PostCard extends StatelessWidget {
-  PostCard({super.key});
+  PostCard({super.key, required this.userData});
+  Map<String, dynamic> userData;
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.sizeOf(context).height;
@@ -18,14 +19,15 @@ class PostCard extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 30,
+                  backgroundImage: NetworkImage(userData['userImage']),
                 ),
                 SizedBox(
                   width: w * .05,
                 ),
-                const Text(
-                  'name ',
+                Text(
+                  '${userData['username']}',
                   style: TextStyle(
                     fontSize: 22,
                   ),
@@ -33,7 +35,7 @@ class PostCard extends StatelessWidget {
               ],
             ),
           ),
-          Image.asset('assets/Snapchat-295033281.jpg',
+          Image.network(userData['postImage'],
               height: h * .5, width: double.infinity, fit: BoxFit.fill),
           Row(
             children: [
@@ -50,8 +52,8 @@ class PostCard extends StatelessWidget {
           const SizedBox(
             height: 5,
           ),
-          const Text(
-            'good',
+          Text(
+            '${userData['des']}',
             style: TextStyle(
               fontSize: 18,
             ),

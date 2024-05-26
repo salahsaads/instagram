@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/Screen/login_Screen.dart';
@@ -59,12 +60,33 @@ class _HomeState extends State<Home> {
                 SizedBox(
                   height: h * .15,
                 ),
-                ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: 5,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return PostCard();
+                StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('post')
+                        .snapshots(),
+                    builder: (context, snapshots) {
+                      if (snapshots.connectionState ==
+                          ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshots.hasError) {
+                        return const Center(
+                          child: Text('error'),
+                        );
+                      } else {
+                        return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: snapshots.data!.docs.length,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              Map<String, dynamic> userData =
+                                  snapshots.data!.docs[index].data()
+                                      as Map<String, dynamic>;
+
+                              return PostCard(
+                                userData: userData,
+                              );
+                            });
+                      }
                     })
               ],
             ),
