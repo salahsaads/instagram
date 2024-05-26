@@ -46,13 +46,14 @@ class _PostScreenState extends State<PostScreen> {
             .child(uuid + 'jpg');
         await ref.putFile(pickedImage!);
         final ImageUrl = await ref.getDownloadURL();
-        FirebaseFirestore.instance.collection('post').add({
+        FirebaseFirestore.instance.collection('post').doc(uuid).set({
           'username': userprovider.getUser!.username,
           'uid': userprovider.getUser!.uid,
           'userImage': userprovider.getUser!.imageUrl,
           'postImage': ImageUrl,
           'postid': uuid,
-          'des': comment.text
+          'des': comment.text,
+          'lieks': []
         });
 
         ScaffoldMessenger.of(context)

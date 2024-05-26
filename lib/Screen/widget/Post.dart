@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:instagram/Screen/comment.dart';
+import 'package:instagram/firebase/Firebase.dart';
 
 class PostCard extends StatelessWidget {
   PostCard({super.key, required this.userData});
@@ -39,7 +41,15 @@ class PostCard extends StatelessWidget {
               height: h * .5, width: double.infinity, fit: BoxFit.fill),
           Row(
             children: [
-              IconButton(onPressed: () {}, icon: const Icon(Icons.favorite)),
+              IconButton(
+                  onPressed: () {
+                    FireStoreData().add_post_like(postUser: userData);
+                  },
+                  icon: Icon(Icons.favorite,
+                      color: userData['likes']
+                              .contains(FirebaseAuth.instance.currentUser!.uid)
+                          ? Colors.red
+                          : Colors.white)),
               IconButton(onPressed: () {}, icon: const Icon(Icons.comment)),
             ],
           ),

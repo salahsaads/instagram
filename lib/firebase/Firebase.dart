@@ -12,4 +12,23 @@ class FireStoreData {
     UserModel userdata = UserModel.fromJson(data.data());
     return userdata;
   }
+
+  add_post_like({required Map postUser}) async {
+    if (postUser['likes'].contains(FirebaseAuth.instance.currentUser!.uid)) {
+      await FirebaseFirestore.instance
+          .collection('post')
+          .doc(postUser['postid'])
+          .update({
+        'likes':
+            FieldValue.arrayRemove([FirebaseAuth.instance.currentUser!.uid])
+      });
+    } else {
+      await FirebaseFirestore.instance
+          .collection('post')
+          .doc(postUser['postid'])
+          .update({
+        'likes': FieldValue.arrayUnion([FirebaseAuth.instance.currentUser!.uid])
+      });
+    }
+  }
 }
