@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -19,6 +20,9 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Column(
               children: [
                 TextField(
+                  onChanged: (value) {
+                    setState(() {});
+                  },
                   controller: _controller,
                   decoration: const InputDecoration(
                       hintText: 'Search',
@@ -29,24 +33,40 @@ class _SearchScreenState extends State<SearchScreen> {
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           borderSide: BorderSide(color: Colors.white))),
                 ),
-                ListView.builder(
-                    itemCount: 15,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return const Padding(
-                        padding: EdgeInsets.only(top: 10),
-                        child: ListTile(
-                          title: Text(
-                            'name',
-                            style: TextStyle(
-                                fontSize: 22, fontWeight: FontWeight.bold),
-                          ),
-                          leading: CircleAvatar(
-                            radius: 30,
-                          ),
-                        ),
-                      );
+                FutureBuilder(
+                    future: FirebaseFirestore.instance
+                        .collection('users')
+                        .where('username', isEqualTo: _controller.text)
+                        .get(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else {
+                        return ListView.builder(
+                            itemCount: snapshot.data!.docs.length,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: ListTile(
+                                  title: Text(
+                                    '${snapshot.data!.docs[index]['username']}',
+                                    style: const TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  leading: CircleAvatar(
+                                    radius: 30,
+                                    backgroundImage: NetworkImage(
+                                        snapshot.data!.docs[index]['imageUrl']),
+                                  ),
+                                ),
+                              );
+                            });
+                      }
                     })
               ],
             ),
