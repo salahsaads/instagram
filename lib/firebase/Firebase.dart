@@ -47,20 +47,22 @@ class FireStoreData {
     required comment,
     required userImage,
     required uid,
-    required posiId,
+    required postId,
+    required name
   }) async {
     final uuid = Uuid().v4();
 
     await FirebaseFirestore.instance
         .collection('post')
-        .doc(posiId)
+        .doc(postId)
         .collection('comment')
         .doc(uid)
         .set({
       'comment': comment.text,
       'userImage': userImage,
-      'postId': posiId,
+      'postId': postId,
       'commentid': uuid,
+      'name':name
     });
   }
 }
