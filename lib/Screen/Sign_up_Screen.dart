@@ -13,7 +13,7 @@ import 'package:instagram/model/user_model.dart';
 import 'package:uuid/uuid.dart';
 
 class Sign_up extends StatefulWidget {
-  Sign_up({super.key});
+  const Sign_up({super.key});
 
   @override
   State<Sign_up> createState() => _Sign_upState();
@@ -44,11 +44,11 @@ class _Sign_upState extends State<Sign_up> {
       isloading = true;
     });
     try {
-      final uuid = Uuid().v4();
+      final uuid = const Uuid().v4();
       final ref = FirebaseStorage.instance
           .ref()
           .child('usersImage')
-          .child(uuid + 'jpg');
+          .child('${uuid}jpg');
       await ref.putFile(pickedImage!);
       final ImageUrl = await ref.getDownloadURL();
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -71,7 +71,7 @@ class _Sign_upState extends State<Sign_up> {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => BouttonBar(),
+            builder: (context) => const BouttonBar(),
           ));
 
       setState(() {
@@ -131,7 +131,7 @@ class _Sign_upState extends State<Sign_up> {
                           radius: 36,
                           backgroundImage: FileImage(pickedImage!),
                         )
-                      : CircleAvatar(
+                      : const CircleAvatar(
                           radius: 36,
                         ),
                   Positioned(
@@ -221,7 +221,7 @@ class _Sign_upState extends State<Sign_up> {
                       color: Colors.blue,
                       borderRadius: BorderRadius.circular(5)),
                   child: isloading == true
-                      ? CircularProgressIndicator()
+                      ? const CircularProgressIndicator()
                       : const Text(
                           'Sing Up',
                           style: TextStyle(

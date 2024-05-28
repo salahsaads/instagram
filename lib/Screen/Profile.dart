@@ -50,7 +50,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ],
                     ),
-                    Column(
+                    const Column(
                       children: [
                         Text(
                           '1K',
@@ -62,7 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ],
                     ),
-                    Column(
+                    const Column(
                       children: [
                         Text(
                           '501K',
@@ -77,10 +77,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    '${userprovider.getUser!.username}',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    userprovider.getUser!.username,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),
                 Container(

@@ -30,10 +30,18 @@ class PostCard extends StatelessWidget {
                 ),
                 Text(
                   '${userData['username']}',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 22,
                   ),
-                )
+                ),
+                const Spacer(),
+                userData['uid'] == FirebaseAuth.instance.currentUser!.uid
+                    ? IconButton(
+                        onPressed: () {
+                          FireStoreData().delate_post(postUser: userData);
+                        },
+                        icon: const Icon(Icons.remove))
+                    : Container()
               ],
             ),
           ),
@@ -42,19 +50,22 @@ class PostCard extends StatelessWidget {
           Row(
             children: [
               IconButton(
-                  onPressed: () {
-                    FireStoreData().add_post_like(postUser: userData);
-                  },
-                  icon: Icon(Icons.favorite,
-                      color: userData['likes']
-                              .contains(FirebaseAuth.instance.currentUser!.uid)
-                          ? Colors.red
-                          : Colors.white)),
+                onPressed: () {
+                  FireStoreData().add_post_like(postUser: userData);
+                },
+                icon: Icon(Icons.favorite,
+                    color: userData['likes'] != []
+                        ? userData['likes'].contains(
+                                FirebaseAuth.instance.currentUser!.uid)
+                            ? Colors.red
+                            : Colors.white
+                        : Colors.white),
+              ),
               IconButton(onPressed: () {}, icon: const Icon(Icons.comment)),
             ],
           ),
-          const Text(
-            '1K',
+          Text(
+            '${userData['likes'].length} likes',
             style: TextStyle(
               fontSize: 18,
             ),
@@ -64,7 +75,7 @@ class PostCard extends StatelessWidget {
           ),
           Text(
             '${userData['des']}',
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 18,
             ),
           ),
@@ -76,7 +87,9 @@ class PostCard extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const CommentScreen()));
+                      builder: (context) => CommentScreen(
+                            PostId: userData['postid'],
+                          )));
             },
             child:
                 const Text('Add Comment', style: TextStyle(color: Colors.grey)),

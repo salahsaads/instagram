@@ -27,7 +27,7 @@ class _LoginState extends State<Login> {
            Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => BouttonBar(),
+            builder: (context) => const BouttonBar(),
           ));
 
 
@@ -66,7 +66,7 @@ class _LoginState extends State<Login> {
           SizedBox(
             height: height * .1,
           ),
-          Text(
+          const Text(
             'instagram',
             style: TextStyle(
                 fontWeight: FontWeight.bold, fontSize: 24, color: Colors.white),
@@ -132,7 +132,7 @@ class _LoginState extends State<Login> {
               decoration: BoxDecoration(
                   color: Colors.blue, borderRadius: BorderRadius.circular(5)),
               child: isloading == true
-                  ? CircularProgressIndicator()
+                  ? const CircularProgressIndicator()
                   : const Text(
                       'Login',
                       style:
@@ -149,7 +149,7 @@ class _LoginState extends State<Login> {
                     .push(MaterialPageRoute(builder: (context) => Sign_up()));
               },
               child: const Text(
-                'don\`t you have an account?',
+                'don`t you have an account?',
                 style: TextStyle(color: Colors.blue),
               ))
         ],

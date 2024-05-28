@@ -51,10 +51,10 @@ class _HomeState extends State<Home> {
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => Login(),
+                                builder: (context) => const Login(),
                               ));
                         },
-                        icon: Icon(Icons.logout))
+                        icon: const Icon(Icons.logout))
                   ],
                 ),
                 SizedBox(

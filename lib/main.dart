@@ -33,15 +33,15 @@ class MyApp extends StatelessWidget {
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               } else if (snapshot.hasError) {
-                return Center(
+                return const Center(
                   child: Text('Error'),
                 );
               } else if (snapshot.data == null) {
-                return Login();
+                return const Login();
               } else {
-                return BouttonBar();
+                return const BouttonBar();
               }
             },
           )),

@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:instagram/firebase/Firebase.dart';
+import 'package:instagram/provider/provider.dart';
+import 'package:provider/provider.dart';
 
 class CommentScreen extends StatefulWidget {
-  const CommentScreen({super.key});
+  const CommentScreen({super.key, required this.PostId});
 
+  final PostId;
   @override
   State<CommentScreen> createState() => _CommentScreenState();
 }
 
 class _CommentScreenState extends State<CommentScreen> {
+  final comment = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final userprovider = Provider.of<Userprovider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -38,25 +45,41 @@ class _CommentScreenState extends State<CommentScreen> {
                         onPressed: () {}, icon: const Icon(Icons.favorite)),
                   );
                 }),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
                   CircleAvatar(
                     radius: 30,
+                    backgroundImage:
+                        NetworkImage(userprovider.userModel!.imageUrl),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 5,
                   ),
                   Expanded(
                     child: TextField(
+                      controller: comment,
                       decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                              onPressed: () {
+                                if (comment.text != '') {
+                                  FireStoreData().add_comment(
+                                      comment: comment,
+                                      userImage:
+                                          userprovider.userModel!.imageUrl,
+                                      uid: userprovider.userModel!.uid,
+                                      posiId: widget.PostId);
+                                }
+                                comment.clear();
+                              },
+                              icon: Icon(Icons.send)),
                           hintText: 'add comment',
-                          focusedBorder: OutlineInputBorder(
+                          focusedBorder: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                             borderSide: BorderSide(color: Colors.blue),
                           ),
-                          enabledBorder: OutlineInputBorder(
+                          enabledBorder: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                             borderSide: BorderSide(color: Colors.blue),
                           )),

@@ -39,11 +39,11 @@ class _PostScreenState extends State<PostScreen> {
 
     void upload_post() async {
       try {
-        final uuid = Uuid().v4();
+        final uuid = const Uuid().v4();
         final ref = FirebaseStorage.instance
             .ref()
             .child('postImage')
-            .child(uuid + 'jpg');
+            .child('${uuid}jpg');
         await ref.putFile(pickedImage!);
         final ImageUrl = await ref.getDownloadURL();
         FirebaseFirestore.instance.collection('post').doc(uuid).set({
@@ -53,11 +53,11 @@ class _PostScreenState extends State<PostScreen> {
           'postImage': ImageUrl,
           'postid': uuid,
           'des': comment.text,
-          'lieks': []
+          'likes': []
         });
 
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Done')));
+            .showSnackBar(const SnackBar(content: Text('Done')));
 
         setState(() {
           pickedImage = null;
