@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/Screen/Home.dart';
 import 'package:instagram/Screen/Profile.dart';
@@ -17,7 +18,9 @@ class _BouttonBarState extends State<BouttonBar> {
     const Home(),
     const SearchScreen(),
     const PostScreen(),
-    const ProfileScreen()
+    ProfileScreen(
+      UserUid: FirebaseAuth.instance.currentUser!.uid,
+    )
   ];
 
   void SelectedPage(index) {

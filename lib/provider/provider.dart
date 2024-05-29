@@ -8,8 +8,8 @@ class Userprovider with ChangeNotifier {
     return userModel;
   }
 
-  void fetchUser() async {
-    UserModel user = await FireStoreData().UserData();
+  void fetchUser({required UserUid}) async {
+    UserModel user = await FireStoreData().UserData(userUID: UserUid);
     userModel = user;
     notifyListeners();
   }

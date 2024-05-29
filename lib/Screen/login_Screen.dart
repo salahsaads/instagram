@@ -146,7 +146,7 @@ class _LoginState extends State<Login> {
           TextButton(
               onPressed: () {
                 Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => Sign_up()));
+                    .push(MaterialPageRoute(builder: (context) => const Sign_up()));
               },
               child: const Text(
                 'don`t you have an account?',

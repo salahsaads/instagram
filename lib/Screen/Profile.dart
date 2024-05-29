@@ -1,24 +1,31 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/provider/provider.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
-
+  const ProfileScreen({super.key, required this.UserUid});
+  final UserUid;
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final userprovider = Provider.of<Userprovider>(context, listen: false);
+    userprovider.fetchUser(UserUid: widget.UserUid);
+  }
+
   Widget build(BuildContext context) {
     double h = MediaQuery.sizeOf(context).height;
     // ignore: unused_local_variable
     double w = MediaQuery.sizeOf(context).width;
 
     final userprovider = Provider.of<Userprovider>(context);
-   
 
     return SafeArea(
       child: Scaffold(
@@ -80,7 +87,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     userprovider.getUser!.username,
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),
                 Container(
@@ -92,28 +100,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.grey[900]),
                       onPressed: () {},
-                      child: const Text(
-                        'Edit Profile',
-                        style: TextStyle(color: Colors.white),
-                      )),
+                      child: widget.UserUid ==
+                              FirebaseAuth.instance.currentUser!.uid
+                          ? Text(
+                              'Edit Profile',
+                              style: TextStyle(color: Colors.white),
+                            )
+                          : Text(
+                              'Follow',
+                              style: TextStyle(color: Colors.white),
+                            )),
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                GridView.count(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 1,
-                  mainAxisSpacing: 1,
-                  childAspectRatio: 5 / 3,
-                  children: List.generate(5, (index) {
-                    return Image.asset(
-                      'assets/Snapchat-295033281.jpg',
-                      fit: BoxFit.fill,
-                    );
-                  }),
-                )
+                FutureBuilder(
+                    future: FirebaseFirestore.instance
+                        .collection('post')
+                        .where('uid', isEqualTo: widget.UserUid)
+                        .get(),
+                    builder: (context, snap) {
+                      if (snap.connectionState == ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else {
+                        return GridView.count(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 1,
+                          mainAxisSpacing: 1,
+                          childAspectRatio: 5 / 3,
+                          children:
+                              List.generate(snap.data!.docs.length, (index) {
+                            return Image.network(
+                              snap.data!.docs[index]['postImage'],
+                              fit: BoxFit.fill,
+                            );
+                          }),
+                        );
+                      }
+                    })
               ],
             ),
           ),

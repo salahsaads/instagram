@@ -39,7 +39,7 @@ class _CommentScreenState extends State<CommentScreen> {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
+                    return const Center(
                       child: CircularProgressIndicator(),
                     );
                   } else {
@@ -49,7 +49,7 @@ class _CommentScreenState extends State<CommentScreen> {
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           Map<String, dynamic> data = snapshot.data!.docs[index]
-                              .data() as Map<String, dynamic>;
+                              .data();
                           return ListTile(
                             title: Text('${data['name']}'),
                             subtitle: Text('${data['comment']}'),
@@ -93,7 +93,7 @@ class _CommentScreenState extends State<CommentScreen> {
                                 }
                                 comment.clear();
                               },
-                              icon: Icon(Icons.send)),
+                              icon: const Icon(Icons.send)),
                           hintText: 'add comment',
                           focusedBorder: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(10)),

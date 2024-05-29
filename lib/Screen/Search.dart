@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/Screen/Profile.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -40,7 +41,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         .get(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
+                        return const Center(
                           child: CircularProgressIndicator(),
                         );
                       } else {
@@ -52,6 +53,13 @@ class _SearchScreenState extends State<SearchScreen> {
                               return Padding(
                                 padding: const EdgeInsets.only(top: 10),
                                 child: ListTile(
+                                  onTap: (){
+                                       Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>  ProfileScreen( UserUid:  snapshot.data!.docs[index]['uid']),
+                              ));
+                                  },
                                   title: Text(
                                     '${snapshot.data!.docs[index]['username']}',
                                     style: const TextStyle(

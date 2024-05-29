@@ -14,14 +14,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    final userprovider = Provider.of<Userprovider>(context, listen: false);
-    userprovider.fetchUser();
-  }
-
+ 
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.sizeOf(context).height;

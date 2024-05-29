@@ -2,13 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:instagram/model/user_model.dart';
 import 'package:uuid/uuid.dart';
-import 'package:uuid/v4.dart';
 
 class FireStoreData {
-  Future<UserModel> UserData() async {
+  Future<UserModel> UserData({required userUID}) async {
     var data = await FirebaseFirestore.instance
         .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .doc(userUID)
         .get();
 
     UserModel userdata = UserModel.fromJson(data.data());
@@ -50,7 +49,7 @@ class FireStoreData {
     required postId,
     required name
   }) async {
-    final uuid = Uuid().v4();
+    final uuid = const Uuid().v4();
 
     await FirebaseFirestore.instance
         .collection('post')

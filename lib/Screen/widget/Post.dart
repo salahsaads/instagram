@@ -66,7 +66,7 @@ class PostCard extends StatelessWidget {
           ),
           Text(
             '${userData['likes'].length} likes',
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 18,
             ),
           ),
