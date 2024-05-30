@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/firebase/Firebase.dart';
 import 'package:instagram/provider/provider.dart';
 import 'package:provider/provider.dart';
 
@@ -12,14 +13,32 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  late List Following;
+
+  bool? Is_Following;
+
+  void User() async {
+    var snap = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+    Following = snap.data()!['following'];
+
+    setState(() {
+      Is_Following = Following.contains(widget.UserUid);
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     final userprovider = Provider.of<Userprovider>(context, listen: false);
     userprovider.fetchUser(UserUid: widget.UserUid);
+    User();
   }
 
+  @override
   Widget build(BuildContext context) {
     double h = MediaQuery.sizeOf(context).height;
     // ignore: unused_local_variable
@@ -57,25 +76,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ],
                     ),
-                    const Column(
+                    Column(
                       children: [
                         Text(
-                          '1K',
+                          '${userprovider.getUser!.followers.length}',
                           style: TextStyle(fontSize: 18),
                         ),
-                        Text(
+                        const Text(
                           'Followers',
                           style: TextStyle(fontSize: 18),
                         ),
                       ],
                     ),
-                    const Column(
+                    Column(
                       children: [
                         Text(
-                          '501K',
+                          '${userprovider.getUser!.following.length}',
                           style: TextStyle(fontSize: 18),
                         ),
-                        Text(
+                        const Text(
                           'Following',
                           style: TextStyle(fontSize: 18),
                         ),
@@ -93,23 +112,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 Container(
                   decoration: BoxDecoration(
-                      color: Colors.grey[900],
+                      color:
+                          Is_Following == true ? Colors.red : Colors.grey[900],
                       borderRadius: BorderRadius.circular(10)),
                   width: double.infinity,
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey[900]),
-                      onPressed: () {},
+                          backgroundColor: Is_Following == true
+                              ? Colors.red
+                              : Colors.grey[900]),
+                      onPressed: () {
+                        if (widget.UserUid !=
+                            FirebaseAuth.instance.currentUser!.uid) {
+                          if (Is_Following == true) {
+                            //UnFollow
+
+                            FireStoreData()
+                                .Un_follow_User(userID: widget.UserUid);
+                            userprovider.dcrease_Following();
+                            setState(() {
+                              Is_Following = false;
+                            });
+                          } else {
+                            FireStoreData().follow_User(userID: widget.UserUid);
+                            userprovider.increase_Following();
+                            setState(() {
+                              Is_Following = true;
+                            });
+                          }
+                        }
+                      },
                       child: widget.UserUid ==
                               FirebaseAuth.instance.currentUser!.uid
-                          ? Text(
+                          ? const Text(
                               'Edit Profile',
                               style: TextStyle(color: Colors.white),
                             )
-                          : Text(
-                              'Follow',
-                              style: TextStyle(color: Colors.white),
-                            )),
+                          : Is_Following == true
+                              ? const Text(
+                                  'UnFollow',
+                                  style: TextStyle(color: Colors.white),
+                                )
+                              : const Text(
+                                  'Follow',
+                                  style: TextStyle(color: Colors.white),
+                                )),
                 ),
                 const SizedBox(
                   height: 10,
@@ -121,7 +168,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         .get(),
                     builder: (context, snap) {
                       if (snap.connectionState == ConnectionState.waiting) {
-                        return Center(
+                        return const Center(
                           child: CircularProgressIndicator(),
                         );
                       } else {

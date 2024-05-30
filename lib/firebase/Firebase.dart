@@ -5,10 +5,8 @@ import 'package:uuid/uuid.dart';
 
 class FireStoreData {
   Future<UserModel> UserData({required userUID}) async {
-    var data = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userUID)
-        .get();
+    var data =
+        await FirebaseFirestore.instance.collection('users').doc(userUID).get();
 
     UserModel userdata = UserModel.fromJson(data.data());
     return userdata;
@@ -42,13 +40,12 @@ class FireStoreData {
     }
   }
 
-  add_comment({
-    required comment,
-    required userImage,
-    required uid,
-    required postId,
-    required name
-  }) async {
+  add_comment(
+      {required comment,
+      required userImage,
+      required uid,
+      required postId,
+      required name}) async {
     final uuid = const Uuid().v4();
 
     await FirebaseFirestore.instance
@@ -61,7 +58,38 @@ class FireStoreData {
       'userImage': userImage,
       'postId': postId,
       'commentid': uuid,
-      'name':name
+      'name': name
+    });
+  }
+
+  follow_User({required userID}) async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update({
+      'following': FieldValue.arrayUnion([userID])
+    });
+
+    await FirebaseFirestore.instance.collection('users').doc(userID).update({
+      'followers': FieldValue.arrayUnion([
+        FirebaseAuth.instance.currentUser!.uid,
+      ])
+    });
+  }
+
+
+   Un_follow_User({required userID}) async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update({
+      'following': FieldValue.arrayRemove([userID])
+    });
+
+    await FirebaseFirestore.instance.collection('users').doc(userID).update({
+      'followers': FieldValue.arrayRemove([
+        FirebaseAuth.instance.currentUser!.uid,
+      ])
     });
   }
 }
