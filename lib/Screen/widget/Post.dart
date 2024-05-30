@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/Screen/comment.dart';
 import 'package:instagram/firebase/Firebase.dart';
+import 'package:intl/intl.dart';
 
 class PostCard extends StatelessWidget {
   PostCard({super.key, required this.userData});
@@ -96,8 +97,8 @@ class PostCard extends StatelessWidget {
           const SizedBox(
             height: 5,
           ),
-          const Text(
-            '1 hour age',
+          Text(
+            DateFormat.MMMEd().format(userData['date'].toDate()),
             style: TextStyle(
               fontSize: 12,
             ),

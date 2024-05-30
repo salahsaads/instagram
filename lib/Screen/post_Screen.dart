@@ -50,10 +50,11 @@ class _PostScreenState extends State<PostScreen> {
           'username': userprovider.getUser!.username,
           'uid': userprovider.getUser!.uid,
           'userImage': userprovider.getUser!.imageUrl,
-          'postImage': ImageUrl,
+          'postImage': ImageUrl, 
           'postid': uuid,
           'des': comment.text,
-          'likes': []
+          'likes': [],
+          'date': Timestamp.now()
         });
 
         ScaffoldMessenger.of(context)

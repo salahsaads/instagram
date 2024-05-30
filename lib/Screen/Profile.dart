@@ -16,14 +16,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late List Following;
 
   bool? Is_Following;
-
+  int? count_post;
   void User() async {
     var snap = await FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
     Following = snap.data()!['following'];
-
+    var snap_user = await FirebaseFirestore.instance
+        .collection('post')
+        .where('uid', isEqualTo: widget.UserUid)
+        .get();
+    count_post = snap_user.docs.length;
     setState(() {
       Is_Following = Following.contains(widget.UserUid);
     });
@@ -64,13 +68,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         radius: 36,
                         backgroundImage:
                             NetworkImage(userprovider.getUser!.imageUrl)),
-                    const Column(
+                    Column(
                       children: [
                         Text(
-                          '12',
+                          '${count_post ?? 0}',
                           style: TextStyle(fontSize: 18),
                         ),
-                        Text(
+                        const Text(
                           'Posts',
                           style: TextStyle(fontSize: 18),
                         ),
